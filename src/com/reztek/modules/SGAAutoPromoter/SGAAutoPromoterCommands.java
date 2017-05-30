@@ -5,7 +5,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.reztek.SGAExtendedBot;
+import com.reztek.JDBExtendedBot;
 import com.reztek.Base.CommandModule;
 import com.reztek.modules.GuardianControl.GuardianControlCommands;
 import com.reztek.modules.SGAAutoPromoter.SGARankDefines.SGARank;
@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 public class SGAAutoPromoterCommands extends CommandModule {
 	
 	public static final String PLUGIN_ID  = "SGAAUTOPROMOTER";
-	public static final String PLUGIN_VER = "1.1";
+	public static final String PLUGIN_VER = "1.2";
 	
 	public static final String SGA_GUILD_ID             = "252581874596184065";
 	public static final String SGA_COURTYARD_CHANNEL_ID = "255514407121977344";
@@ -42,7 +42,7 @@ public class SGAAutoPromoterCommands extends CommandModule {
 		addCommand(new String[] {
 				"runpromotions", "testmsg"
 		});
-		p_sgaGuild = SGAExtendedBot.GetBot().getJDA().getGuildById(SGA_GUILD_ID);
+		p_sgaGuild = JDBExtendedBot.GetBot().getJDA().getGuildById(SGA_GUILD_ID);
 		if (p_sgaGuild == null) {
 			System.out.println("Error Connecting To Guild - Disabling Plugin");
 			p_disabled = true;
@@ -55,7 +55,7 @@ public class SGAAutoPromoterCommands extends CommandModule {
 				p_aptask = new SGAAutoPromoterTask(this);
 				p_aptask.setTaskDelay(30);
 				p_aptask.setTaskName("SGA Auto Promoter");
-				SGAExtendedBot.GetBot().addTask(p_aptask);
+				JDBExtendedBot.GetBot().addTask(p_aptask);
 			}
 		}
 	}
@@ -64,7 +64,7 @@ public class SGAAutoPromoterCommands extends CommandModule {
 	public void processCommand(String command, String args, MessageReceivedEvent mre) {
 		
 		if (p_disabled) {
-			SGAExtendedBot.GetBot().getMessageHandler().removeCommandModule(getModuleID());
+			JDBExtendedBot.GetBot().getMessageHandler().removeCommandModule(getModuleID());
 			System.out.println("SGA Auto Promoter removed due to disabled");
 			return;
 		}
