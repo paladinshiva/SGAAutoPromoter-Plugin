@@ -98,7 +98,9 @@ public class SGAAutoPromoterCommands extends CommandModule {
 	
 	@Override
 	public void processMemberJoin(GuildMemberJoinEvent e) {
-		p_aptask.promoteMember(e.getMember());
+		if (e.getGuild().getId().equals(SGA_GUILD_ID)) {
+			p_aptask.promoteMember(e.getMember());
+		}
 	}
 	
 	public Guild getSGAGuild() {
