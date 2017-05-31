@@ -32,7 +32,18 @@ public class SGAAutoPromoterTask extends Taskable {
 	
 	public void runPromotions() {
 		for (Member m : getSGAAutoPromoterCommands().getSGAGuild().getMembers()) {
-			if ( (m.getOnlineStatus() == OnlineStatus.ONLINE || m.getOnlineStatus() == OnlineStatus.IDLE) && !m.getUser().isBot() ) {
+			promoteMember(m);
+		}
+	}
+
+	public void promoteMember(Member m) {
+		if ( (m.getOnlineStatus() == OnlineStatus.ONLINE || m.getOnlineStatus() == OnlineStatus.IDLE) && !m.getUser().isBot() ) {
+			SGARank curRank = SGARankDefines.GetCurrentHighestRank(m);
+			if (curRank.getWeight() == SGARankDefines.RANK_NO_RANK) {
+				getSGAAutoPromoterCommands().getSGAGuild().getController().addRolesToMember(m, getSGAAutoPromoterCommands().getSGAGuild().getRoleById(
+						SGARankDefines.GetRankByWeight(SGARankDefines.RANK_NEW_RECRUIT).getRankId()
+						)).queue();
+			} else if (curRank.getWeight() != SGARankDefines.RANK_NEW_RECRUIT) {
 				Guardian g = Guardian.guardianFromNickname(m.getEffectiveName());
 				if (g != null) {
 					SGARank rank = SGARankDefines.GetRankForGuardian(g);
@@ -53,5 +64,4 @@ public class SGAAutoPromoterTask extends Taskable {
 			}
 		}
 	}
-
 }

@@ -14,12 +14,13 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class SGAAutoPromoterCommands extends CommandModule {
 	
 	public static final String PLUGIN_ID  = "SGAAUTOPROMOTER";
-	public static final String PLUGIN_VER = "1.2";
+	public static final String PLUGIN_VER = "1.3";
 	
 	public static final String SGA_GUILD_ID             = "252581874596184065";
 	public static final String SGA_COURTYARD_CHANNEL_ID = "255514407121977344";
@@ -42,6 +43,7 @@ public class SGAAutoPromoterCommands extends CommandModule {
 		addCommand(new String[] {
 				"runpromotions", "testmsg"
 		});
+		setRespondToJoinEvent(true);
 		p_sgaGuild = JDBExtendedBot.GetBot().getJDA().getGuildById(SGA_GUILD_ID);
 		if (p_sgaGuild == null) {
 			System.out.println("Error Connecting To Guild - Disabling Plugin");
@@ -64,7 +66,7 @@ public class SGAAutoPromoterCommands extends CommandModule {
 	public void processCommand(String command, String args, MessageReceivedEvent mre) {
 		
 		if (p_disabled) {
-			JDBExtendedBot.GetBot().getMessageHandler().removeCommandModule(getModuleID());
+			JDBExtendedBot.GetBot().getModuleHandler().removeCommandModule(getModuleID());
 			System.out.println("SGA Auto Promoter removed due to disabled");
 			return;
 		}
@@ -92,6 +94,11 @@ public class SGAAutoPromoterCommands extends CommandModule {
 			}
 			break;
 		}
+	}
+	
+	@Override
+	public void processMemberJoin(GuildMemberJoinEvent e) {
+		p_aptask.promoteMember(e.getMember());
 	}
 	
 	public Guild getSGAGuild() {

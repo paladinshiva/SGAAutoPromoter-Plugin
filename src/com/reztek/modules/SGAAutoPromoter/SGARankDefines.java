@@ -24,29 +24,33 @@ public class SGARankDefines {
 		}
 	}
 	
-	private static final int RANK_FORCE_SENSITIVE_CANDIDATE      = 0;
-	private static final int RANK_FORCE_BELIEVER                 = 1;
-	private static final int RANK_INITIATE                       = 2;
-	private static final int RANK_PADAWAN                        = 3;
-	private static final int RANK_JEDI_KNIGHT                    = 4;
-	private static final int RANK_JEDI_GUARDIAN                  = 5;
-	private static final int RANK_JEDI_HIGH_GENERAL              = 6;
-	private static final int RANK_JEDI_MASTER                    = 7;
-	private static final int RANK_JEDI_GRAND_MASTER              = 8;
-	private static final int RANK_JEDI_GRAND_MASTER_OF_THE_ORDER = 9;
+	public static final int RANK_NO_RANK                        =  0;
+	public static final int RANK_NEW_RECRUIT                    =  1;
+	public static final int RANK_FORCE_SENSITIVE_CANDIDATE      =  2;
+	public static final int RANK_FORCE_BELIEVER                 =  3;
+	public static final int RANK_INITIATE                       =  4;
+	public static final int RANK_PADAWAN                        =  5;
+	public static final int RANK_JEDI_KNIGHT                    =  6;
+	public static final int RANK_JEDI_GUARDIAN                  =  7;
+	public static final int RANK_JEDI_HIGH_GENERAL              =  8;
+	public static final int RANK_JEDI_MASTER                    =  9;
+	public static final int RANK_JEDI_GRAND_MASTER              = 10;
+	public static final int RANK_JEDI_GRAND_MASTER_OF_THE_ORDER = 11;
 	
 	private static final List<SGARank> SGARanks;
 	static {
 		List<SGARank> sgaranks = new ArrayList<SGARank>();
-		sgaranks.add(new SGARank("254192803800678400", "Force Sensitive Candidate", RANK_FORCE_SENSITIVE_CANDIDATE));
-		sgaranks.add(new SGARank("284213958301450250", "Force Believer", RANK_FORCE_BELIEVER));
-		sgaranks.add(new SGARank("254192370722144256", "Initiate", RANK_INITIATE));
-		sgaranks.add(new SGARank("254192251737997312", "Padawan", RANK_PADAWAN));
-		sgaranks.add(new SGARank("254192217856540672", "Jedi Knight", RANK_JEDI_KNIGHT));
-		sgaranks.add(new SGARank("254192171933106178", "Jedi Guardian", RANK_JEDI_GUARDIAN));
-		sgaranks.add(new SGARank("284213825337556992", "Jedi High General", RANK_JEDI_HIGH_GENERAL));
-		sgaranks.add(new SGARank("254192105100935168", "Jedi Master", RANK_JEDI_MASTER));
-		sgaranks.add(new SGARank("265261646945976321", "Jedi Grand Master", RANK_JEDI_GRAND_MASTER));
+		sgaranks.add(new SGARank(""                  , "No Rank",                        RANK_NO_RANK));
+		sgaranks.add(new SGARank("285837753617219584", "New Recruit",                    RANK_NEW_RECRUIT));
+		sgaranks.add(new SGARank("254192803800678400", "Force Sensitive Candidate",      RANK_FORCE_SENSITIVE_CANDIDATE));
+		sgaranks.add(new SGARank("284213958301450250", "Force Believer",                 RANK_FORCE_BELIEVER));
+		sgaranks.add(new SGARank("254192370722144256", "Initiate",                       RANK_INITIATE));
+		sgaranks.add(new SGARank("254192251737997312", "Padawan",                        RANK_PADAWAN));
+		sgaranks.add(new SGARank("254192217856540672", "Jedi Knight",                    RANK_JEDI_KNIGHT));
+		sgaranks.add(new SGARank("254192171933106178", "Jedi Guardian",                  RANK_JEDI_GUARDIAN));
+		sgaranks.add(new SGARank("284213825337556992", "Jedi High General",              RANK_JEDI_HIGH_GENERAL));
+		sgaranks.add(new SGARank("254192105100935168", "Jedi Master",                    RANK_JEDI_MASTER));
+		sgaranks.add(new SGARank("265261646945976321", "Jedi Grand Master",              RANK_JEDI_GRAND_MASTER));
 		sgaranks.add(new SGARank("283322230577037333", "Jedi Grand Master of The Order", RANK_JEDI_GRAND_MASTER_OF_THE_ORDER));
 		SGARanks = Collections.unmodifiableList(sgaranks);
 	}
@@ -73,8 +77,8 @@ public class SGARankDefines {
 		return null;
 	}
 	
-	public static boolean ShouldUpgradeToRank(Member m, SGARank proposedRank) {
-		int currentHighestRank = RANK_FORCE_SENSITIVE_CANDIDATE;
+	public static SGARank GetCurrentHighestRank(Member m) {
+		int currentHighestRank = RANK_NO_RANK;
 		for (Role r : m.getRoles()) {
 			SGARank testRank = GetRankForID(r.getId());
 			if (testRank != null) {
@@ -83,7 +87,12 @@ public class SGARankDefines {
 				}
 			}
 		}
-		if (proposedRank.getWeight() > currentHighestRank) {
+		return GetRankByWeight(currentHighestRank);
+	}
+	
+	public static boolean ShouldUpgradeToRank(Member m, SGARank proposedRank) {
+		SGARank currentHighestRank = GetCurrentHighestRank(m);
+		if (proposedRank.getWeight() > currentHighestRank.getWeight()) {
 			return true;
 		}
 		return false;
