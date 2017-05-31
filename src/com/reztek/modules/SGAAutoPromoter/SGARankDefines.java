@@ -115,7 +115,7 @@ public class SGARankDefines {
 					}
 					break;
 				case RANK_PADAWAN:
-					if (Integer.valueOf(g.getRumbleRank()) <= 22000) {
+					if (Integer.valueOf(g.getRumbleRank()) <= 20000) {
 						if (returnRank._weight < r._weight) returnRank = r;
 					}
 					break;
